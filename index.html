@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script>
+    if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        window.location.href = "mobile/index.html"; 
+    }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红彦工作室 | HongYan Studio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --accent: #0084ff;
+            --bg: #050507;
+            --nav-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        html { 
+            scroll-behavior: smooth; 
+            scroll-padding-top: var(--nav-height); 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Noto Sans SC', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: rgba(5, 5, 7, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 9999;
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue';
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .studio-hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, rgba(255, 62, 62, 0.1) 0%, transparent 70%);
+        }
+
+        .studio-tag {
+            letter-spacing: 5px; color: var(--accent); font-weight: bold;
+            display: block; margin-bottom: 15px; font-size: 0.9rem;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 12vw, 7rem);
+            line-height: 0.9;
+            margin-bottom: 25px;
+        }
+
+        h1 span { color: var(--primary); }
+
+        .hero-content p {
+            max-width: 700px; margin: 0 auto 40px;
+            color: #ccc; font-size: 1.1rem; line-height: 1.6;
+        }
+
+        .server-container {
+            max-width: 1200px; margin: 0 auto; padding: 100px 20px;
+        }
+
+        .section-header { margin-bottom: 60px; }
+        .section-header h2 { font-family: 'Bebas Neue'; font-size: 3.5rem; }
+        .section-header .line { width: 80px; height: 4px; background: var(--primary); margin-top: 10px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .server-card {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #111;
+            transition: var(--transition);
+        }
+
+        .card-image img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: var(--transition);
+        }
+
+        /* 默认在线状态 (绿色) */
+        .online-badge {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(0,0,0,0.8); padding: 6px 15px;
+            border-radius: 30px; font-size: 0.8rem; color: #00ff88;
+            z-index: 5;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .online-badge.offline {
+            color: var(--primary);
+            border: 1px solid rgba(255, 62, 62, 0.3);
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 50%, transparent 100%);
+            padding: 40px 30px;
+            transform: translateY(140px);
+            transition: var(--transition);
+        }
+
+        .card-content h3 { font-size: 1.8rem; margin-bottom: 15px; }
+
+        .expand-info { opacity: 0; transition: var(--transition); }
+
+        .expand-info p { color: #aaa; font-size: 0.95rem; margin-bottom: 25px; }
+
+        .join-btn {
+            display: block; width: 100%; text-align: center;
+            padding: 15px; background: var(--primary); color: white;
+            text-decoration: none; border-radius: 8px; font-weight: bold;
+        }
+
+        .server-card:hover .card-overlay { transform: translateY(0); }
+        .server-card:hover .expand-info { opacity: 1; }
+        .server-card:hover .card-image img { transform: scale(1.1); filter: brightness(0.4); }
+
+        footer { text-align: center; padding: 80px 20px; color: #444; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            h1 { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="hongyan.ouo.lat" class="nav-logo">HongYan<span>Studio</span></a>
+        <div class="nav-links">
+            <a href="#studio-intro">Studio introduction</a>
+            <a href="#server-list">Server list</a>
+            <a href="https://www.roblox.com/communities/35151840/Hongyan-town-RP-new">Join the community</a>
+            <a href="https://qm.qq.com/q/3bdEGiM9MQ">Join our qq group</a>
+        </div>
+    </nav>
+
+    <section id="studio-intro" class="studio-hero">
+        <div class="hero-content">
+            <span class="studio-tag">EST. 2024</span>
+            <h1>HongYan <span>Studio</span></h1>
+            <p>An unknown studio.</p>
+            <div class="hero-btns">
+                <a href="https://discord.gg/fZQ7ASQXcp" style="padding: 15px 35px; background: var(--primary); color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Join our discord</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="server-list" class="server-container">
+        <div class="section-header">
+            <h2>Server list(Hover the mouse over the game icon)</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="grid">
+
+            <div class="server-card">
+                <div class="online-badge">● Online</div>
+                <div class="card-image">
+                    <img src="https://tr.rbxcdn.com/180DAY-e75f7ecbe4fe6f393e7ce0a1604aaea2/256/256/Image/Webp/noFilter" alt="Server 1">
+                </div>
+                <div class="card-overlay">
+                    <div class="card-content">
+                        <h3>HongYan Town</h3>
+                        <div class="expand-info">
+                            <p>This is a town from Inner Mongolia, China. In the game, you can continue role-playing and play the game with friends (Note: switching characters requires joining our community).</p>
+                            <a href="https://www.roblox.com/games/96342218839410/Hongyan-Town-3-1" class="join-btn">Join game</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="server-card">
+                <div class="online-badge offline">● Offline</div>
+                <div class="card-image">
+                    <img src="https://t4.rbxcdn.com/180DAY-3acb0f0da8433cb97bb84fe70301c78f" alt="Server 2">
+                </div>
+                <div class="card-overlay">
+                    <div class="card-content">
+                        <h3>NenJiang</h3>
+                        <div class="expand-info">
+                            <p>From Heilongjiang Province, China. This server is currently under maintenance. Please stay tuned to our community for updates.</p>
+                            <a href="#" class="join-btn" style="background: #333; pointer-events: none;">Maintenance</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="server-card">
+                <div class="online-badge offline">● Offline</div>
+                <div class="card-image">
+                    <img src="https://t4.rbxcdn.com/180DAY-3acb0f0da8433cb97bb84fe70301c78f" alt="Server 3">
+                </div>
+                <div class="card-overlay">
+                    <div class="card-content">
+                        <h3>Shuangnen Expressway</h3>
+                        <div class="expand-info">
+                            <p>From Shuangliao City, Jilin Province, China. This server is currently under maintenance. Please stay tuned to our community for updates.</p>
+                            <a href="#" class="join-btn" style="background: #333; pointer-events: none;">Maintenance</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>HongYan Studio &copy; 2026. </p>
+    </footer>
+
+</body>
+</html>
